@@ -1,7 +1,6 @@
 # DockerNotes
 My DockerNotes
 
-
 # Instalação
 
 ## Remover instalações antigas
@@ -51,6 +50,19 @@ sudo docker run -i -t ubuntu:14.10 /bin/bash;
 # Para configurar portas de acesso basta adicionar o parâmetro -p <porta_host>:<porta_container>
 ```
 
+### Parâmetros para a criação de containers
+
+| Parâmetro  | Descrição  |Exemplo |
+|:-:|:-:|:-:|
+| `-it`  |  `-t` aloca terminal que permite acesso SSH `-i` mantem vivo um STDIN|`docker run -it debian`|
+|`-v`	| compartilhar pasta do host com o container|`-v  <diretório>`|
+|`-w`|Define um diretório padrão ao se conectar via SSH|`-w /home/application`|
+|`-p`|Defini as configurações de porta.|`-p <porta_host>:<porta_container>`|
+|`--link`|Cria um link entre containers.|`docker run -it --name <nome_do_container> --link <container_id_ou_name>:<alias>;`|
+|`--name`|Dá um nome ao container.|`docker run -it --name <nome_do_container> <dist>:<versão>;`|
+|`-m`|Define o limite de memória que o container usa do host|`-m 512M`|
+|`--cpu-shares`|Define o limite de uso de CPU. Usando proporção entre os containers existentes. Ex. Container A 1024, B 512, C 512 usarão respectivamente 50%, 25% e 25% da CPU host.|`--cpu-shares 512`|
+
 # Comandos Importantes
 
 ```bash
@@ -87,8 +99,8 @@ sudo docker attach <id>;
 # Verificar alterações de arquivos do container
 sudo docker diff <id>;
 
-# Commitar alterações
-sudo docker commit <id>; <nome_que_quiser>:<versão_ex: 1.0>;
+# Commitar alterações na imagem
+sudo docker commit <id> <nome_que_quiser>:<versão_ex: 1.0>;
 
 # Para container
 exit;
@@ -112,4 +124,44 @@ Images, containers, volumes, and networks
 
 ```
 /var/lib/docker/
+```
+
+
+# Dockerfile
+
+> Criando Dockerfile para automatizar o build do container.
+
+## Observações
+* O nome do arquivo é Dockerfile(Com D maiúsculo).
+* O comando de build tem que receber o diretório onde o Dockerfile está.
+
+## Parâmetros
+
+```Dockerfile
+# Qual imagem será utilizada
+FROM <distro>:<versão>
+
+# Quem criou o container
+MAINTAINER <nome_ou_email>
+
+# Executar comandos
+RUN <comandos_desejados>
+```
+
+## Exemplo mínimo com ubuntu 20.04 e apache2
+
+```Dockerfile
+From ubuntu:20.04
+MAINTAINER hemilioaraujo@gmail.com
+RUN apt-get update && apt-get install -y apache2 && apt-get clean
+```
+
+## Build
+
+```bash
+# Sem especificação do nome e tag da imagem
+sudo docker build .
+
+# Com especificação do nome e tag da imagem
+sudo docker build -t <imagem>:<tag>;
 ```
