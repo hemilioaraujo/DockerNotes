@@ -116,7 +116,15 @@ sudo docker stats;
 
 # Criar --link entre containers
 sudo docker run -it --name <nome_do_container> --link <container_id_ou_name>:<alias>;
+```
 
+## Docker UPDATE
+
+> O docker update server para modificar o setup de um container em execução
+
+```docker
+# Atualizando o limite de memória
+docker update -m 256M <id>;
 ```
 
 # Localização de arquivos importantes
@@ -165,3 +173,9 @@ sudo docker build .
 # Com especificação do nome e tag da imagem
 sudo docker build -t <imagem>:<tag>;
 ```
+
+# Referências
+
+* [LINUXtips](https://www.youtube.com/playlist?list=PLf-O3X2-mxDk1MnJsejJwqcrDC5kDtXEb) - Playlist Descomplicando Docker
+
+* [devwikiblog](https://www.devwikiblog.com/posts/3/utilizando-docker-em-ambiente-de-desenvolvimento) - Utilizando Docker em ambiente de desenvolvimento
