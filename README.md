@@ -54,14 +54,18 @@ sudo docker run -i -t ubuntu:14.10 /bin/bash;
 
 | Parâmetro  | Descrição  |Exemplo |
 |:-:|:-:|:-:|
-| `-it`  |  `-t` aloca terminal que permite acesso SSH `-i` mantem vivo um STDIN|`docker run -it debian`|
-|`-v`	| compartilhar pasta do host com o container|`-v  <diretório>`|
+| `-it`  |  `-t` aloca terminal que permite acesso `-i` interatividade com o terminal|`docker run -it debian`|
+|`-v`| cria um diretório compartilhado do host com o container|`-v  /<diretório>`|
 |`-w`|Define um diretório padrão ao se conectar via SSH|`-w /home/application`|
 |`-p`|Defini as configurações de porta.|`-p <porta_host>:<porta_container>`|
 |`--link`|Cria um link entre containers.|`docker run -it --name <nome_do_container> --link <container_id_ou_name>:<alias>;`|
 |`--name`|Dá um nome ao container.|`docker run -it --name <nome_do_container> <dist>:<versão>;`|
 |`-m`|Define o limite de memória que o container usa do host|`-m 512M`|
 |`--cpu-shares`|Define o limite de uso de CPU. Usando proporção entre os containers existentes. Ex. Container A 1024, B 512, C 512 usarão respectivamente 50%, 25% e 25% da CPU host.|`--cpu-shares 512`|
+
+
+
+
 
 # Comandos Importantes
 
@@ -80,6 +84,9 @@ sudo docker image rm <image_id>;
 # ou
 sudo docker rmi <image_id>;
 
+# Fazer poll de uma imagem do DockerHub
+sudo docker poll <imagem_do_hub>;
+
 # Excluir container
 sudo docker rm <id>;
 
@@ -92,6 +99,12 @@ ctrl + q;
 
 # Parar container
 sudo docker stop <id>;
+
+# Pausar container
+sudo docker pause <id>;
+
+# Despausar container
+sudo docker unpause <id>;
 
 # Acessar o container
 sudo docker attach <id>;
@@ -114,8 +127,26 @@ sudo docker inspect <id>;
 # Estatisticas de uso
 sudo docker stats;
 
+# Ver log do container
+sudo docker log <id>;
+
+# Listar processos em execução no container
+sudo docker top <id>;
+
 # Criar --link entre containers
 sudo docker run -it --name <nome_do_container> --link <container_id_ou_name>:<alias>;
+
+# Remove todos os contêineres não usados
+docker container prune;
+
+# Remove todas as imagens não usadas
+docker image prune;
+
+# Remove todos os volumes não usados
+docker volume prune;
+
+# Remove todas as redes não utilizadas
+docker network prune;
 ```
 
 ## Docker UPDATE
@@ -174,8 +205,23 @@ sudo docker build .
 sudo docker build -t <imagem>:<tag>;
 ```
 
+# Compartilhando diretório entre host e container
+
+
+## Criar container com compartilhamento simples
+>`sudo docker run -ti -v /<nome_diretório> <imagem>;`
+
+Desta forma, o diretório pode ser encontrado via comando inspect: 
+>`sudo docker inspect -f {{.Mounts}} <id_container>;`
+
+## Criar container com compartilhamento definindo diretórios
+>`docker run -ti -v /<diretório_host>:/<volume_container> <imagem>;`
+
+
 # Referências
 
 * [LINUXtips](https://www.youtube.com/playlist?list=PLf-O3X2-mxDk1MnJsejJwqcrDC5kDtXEb) - Playlist Descomplicando Docker
+
+* [LINUXtips](https://www.youtube.com/playlist?list=PLf-O3X2-mxDkiUH0r_BadgtELJ_qyrFJ) - Curso Descomplicando Docker V1
 
 * [devwikiblog](https://www.devwikiblog.com/posts/3/utilizando-docker-em-ambiente-de-desenvolvimento) - Utilizando Docker em ambiente de desenvolvimento
