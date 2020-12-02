@@ -57,15 +57,13 @@ sudo docker run -i -t ubuntu:14.10 /bin/bash;
 | `-it`  |  `-t` aloca terminal que permite acesso `-i` interatividade com o terminal|`docker run -it debian`|
 |`-v`| cria um diretório compartilhado do host com o container|`-v  /<diretório>`|
 |`-w`|Define um diretório padrão ao se conectar via SSH|`-w /home/application`|
-|`-p`|Defini as configurações de porta.|`-p <porta_host>:<porta_container>`|
+|`-p`|Define as configurações de porta em relação gost/container.|`-p <porta_host>:<porta_container>`|
 |`--link`|Cria um link entre containers.|`docker run -it --name <nome_do_container> --link <container_id_ou_name>:<alias>;`|
 |`--name`|Dá um nome ao container.|`docker run -it --name <nome_do_container> <dist>:<versão>;`|
 |`-m`|Define o limite de memória que o container usa do host|`-m 512M`|
 |`--cpu-shares`|Define o limite de uso de CPU. Usando proporção entre os containers existentes. Ex. Container A 1024, B 512, C 512 usarão respectivamente 50%, 25% e 25% da CPU host.|`--cpu-shares 512`|
-
-
-
-
+|`-e`|Este parâmetro é utilizado quando se necessita passar variáveis de ambiente para o container|`-e POSTGRESQL_USER=docker`|
+|`--volumes-from`|Utilizado para importar volume de outro container. |`--volume-from <nome_container>`|
 
 # Comandos Importantes
 
@@ -177,14 +175,45 @@ Images, containers, volumes, and networks
 ## Parâmetros
 
 ```Dockerfile
-# Qual imagem será utilizada
+# Qual imagem será utilizada(primeiro parâmetro)
 FROM <distro>:<versão>
 
 # Quem criou o container
 MAINTAINER <nome_ou_email>
 
 # Executar comandos
+# Para cada execução uma nova camada
 RUN <comandos_desejados>
+
+# Enviar arquivo ou diretório do host para o container(inclusive .tar)
+ADD <arquivo> <diretório_do_container>
+
+# Parâmetros para o Entrypoint
+CMD
+
+# Entripoint
+ENTRYPOINT
+
+# Adicionar metadatas (informações)
+LABEL <nome>="<conteúdo>"
+
+# Copiar arquivos ou diretório do host para o container(.tar exclusivo)
+COPY <arquivo> <diretório_do_container>
+
+# Passar variáveis de ambiente
+ENV <nome>="<conteúdo>"
+
+# Porta do container disponível
+EXPOSE 80
+
+# Usuário default
+USER <nome_do_user>
+
+# Diretório de trabalho padrão
+WORKDIR /<nome_do_diretório>
+
+# Criar o volume do container
+VOLUME /<diretório>
 ```
 
 ## Exemplo mínimo com ubuntu 20.04 e apache2
@@ -205,17 +234,47 @@ sudo docker build .
 sudo docker build -t <imagem>:<tag>;
 ```
 
-# Compartilhando diretório entre host e container
+# Compartilhando diretórios
 
-
-## Criar container com compartilhamento simples
+## Compartilhamento com host
+### Criar container com compartilhamento simples
 >`sudo docker run -ti -v /<nome_diretório> <imagem>;`
 
 Desta forma, o diretório pode ser encontrado via comando inspect: 
 >`sudo docker inspect -f {{.Mounts}} <id_container>;`
 
-## Criar container com compartilhamento definindo diretórios
+### Criar container com compartilhamento definindo diretórios
 >`docker run -ti -v /<diretório_host>:/<volume_container> <imagem>;`
+
+### Criar container com compartilhamento de outro container
+>`docker run --name <nome_container> --volumes-from <container_volume_compartilhado> <imagem>;`
+
+
+
+<!-- 
+# Criando container postgresql
+
+docker run -d -p 5434:5432 --name pgsql2 --volumes-from dbdados -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker -e POSTGRESQL_DB=docker kamui/postgresql
+ -->
+
+<!-- 
+ # CONTAINER APACHE2 DEBIAN
+
+FROM debian
+RUN apt-get update && apt-get install -y apache2 && apt-get clean
+ENV APACHE_LOCK_DIR="/var/lock"
+ENV APACHE_PID_FILE="/var/run/apache2.pid"
+ENV APACHE_RUN_USER="www-data"
+ENV APACHE_LOG_DIR="/var/log/apache2"
+
+LABEL Description="Webserver"
+
+VOLUME /var/www/html
+
+EXPOSE 80
+
+CMD ["apache2ctl","-D","FOREGROUND"] 
+-->
 
 
 # Referências
