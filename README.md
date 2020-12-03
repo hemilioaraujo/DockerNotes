@@ -63,13 +63,20 @@ sudo docker run -i -t ubuntu:14.10 /bin/bash;
 | `-it`  |  `-t` aloca terminal que permite acesso `-i` interatividade com o terminal|`docker run -it debian`|
 |`-v`| cria um diretório compartilhado do host com o container|`-v  /<diretório>`|
 |`-w`|Define um diretório padrão ao se conectar via SSH|`-w /home/application`|
-|`-p`|Define as configurações de porta em relação gost/container.|`-p <porta_host>:<porta_container>`|
+|`-p` ou `--publish`|Define (bind) as configurações de porta em relação host/container.|`-p <porta_host>:<porta_container>`|
 |`--link`|Cria um link entre containers.|`docker run -it --name <nome_do_container> --link <container_id_ou_name>:<alias>;`|
 |`--name`|Dá um nome ao container.|`docker run -it --name <nome_do_container> <dist>:<versão>;`|
 |`-m`|Define o limite de memória que o container usa do host|`-m 512M`|
 |`--cpu-shares`|Define o limite de uso de CPU. Usando proporção entre os containers existentes. Ex. Container A 1024, B 512, C 512 usarão respectivamente 50%, 25% e 25% da CPU host.|`--cpu-shares 512`|
 |`-e`|Este parâmetro é utilizado quando se necessita passar variáveis de ambiente para o container|`-e POSTGRESQL_USER=docker`|
 |`--volumes-from`|Utilizado para importar volume de outro container. |`--volume-from <nome_container>`|
+|`--restart`|Este comando informa que o container e reiniciado quando por algum motivo ele parar|`--restart=always`|
+|`-d`|Roda o container como daemon ou processo|`-d`|
+|`--dns`|Parâmetro para informar o servidor dns utilizado|`--dns 8.8.8.8`|
+|`--hostname`|Parâmetro para definir o hostname do container internamente no docker|`--hostname biruleibe`|
+|`--expose`|Expõe somente a porta do container se fazer redirect pelo host|`--expose 80`|
+|`--mac-address`|Define um MAC específico para o container|`--mac-address 00:1D:7D:B2:34:F9`|
+
 
 # Comandos Importantes
 
